@@ -1,0 +1,116 @@
+@import url("https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  background-color: #faf7f2;
+  font-family: "Figtree", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  --primary-color: #c1502e;
+  --stroke-color: #e7e1d8;
+}
+
+@media (min-width: 600px) {
+  nav {
+    color: #3c3530;
+    background-color: #f3efe9;
+    border-right: 1px solid var(--stroke-color);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 32px 32px 0px 20px;
+    transition: all 0.3s ease;
+    min-width: 240px;
+
+    .recipie-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+
+      p {
+        font-weight: 700;
+        font-size: 20px;
+      }
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 12px 0px 12px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      overflow: hidden;
+      white-space: nowrap;
+
+      &:hover {
+        background-color: rgba(242, 217, 198, 0.4);
+      }
+
+      img {
+        width: 18px;
+      }
+
+      &.active {
+        color: var(--primary-color);
+        background-color: #f2d9c6;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+@media (min-width: 601px) and (max-width: 1000px) {
+  nav {
+    min-width: 140px;
+  }
+}
+
+@media (max-width: 600px) {
+  nav {
+    color: #9c928d;
+    background-color: white;
+    border-right: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 8px 0px;
+    border-top: 1px solid var(--stroke-color);
+    z-index: 50;
+
+    .recipie-logo {
+      display: none;
+    }
+
+    a.nav-item {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+
+      img {
+        width: 20px;
+      }
+
+      p {
+        font-size: 12px;
+      }
+
+      &.active {
+        color: var(--primary-color);
+      }
+    }
+  }
+}

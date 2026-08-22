@@ -1,0 +1,186 @@
+.recipe-list-page {
+  h1 {
+    .num-recipes {
+      color: #c1502e;
+    }
+  }
+
+  .badges {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 12px;
+    font-size: 12px;
+    margin-bottom: 16px;
+
+    .source-badge {
+      padding: 4px 16px;
+      background-color: #f2d9c6;
+      border-radius: 12px;
+    }
+
+    time {
+      color: #9c928d;
+    }
+  }
+
+  .recipe-list {
+    .recipe-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .remove-recipe {
+        .remove-active {
+          display: none;
+        }
+
+        &:hover {
+          cursor: pointer;
+
+          .remove {
+            display: none;
+          }
+          .remove-active {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+
+  .submit-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  button {
+    background-color: #c1502e;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: none;
+    width: max-content;
+    border-radius: 8px;
+
+    &:hover {
+      background-color: #9e3e2a;
+      cursor: pointer;
+    }
+
+    &:disabled {
+      background-color: #e7e1d8;
+      pointer-events: none;
+    }
+  }
+}
+
+.load-saveall-recipe {
+  height: 20px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 4px solid #c1502e;
+  animation:
+    l20-1 0.8s infinite linear alternate,
+    l20-2 1.6s infinite linear;
+}
+
+@keyframes l20-1 {
+  0% {
+    clip-path: polygon(50% 50%, 0 0, 50% 0%, 50% 0%, 50% 0%, 50% 0%, 50% 0%);
+  }
+  12.5% {
+    clip-path: polygon(
+      50% 50%,
+      0 0,
+      50% 0%,
+      100% 0%,
+      100% 0%,
+      100% 0%,
+      100% 0%
+    );
+  }
+  25% {
+    clip-path: polygon(
+      50% 50%,
+      0 0,
+      50% 0%,
+      100% 0%,
+      100% 100%,
+      100% 100%,
+      100% 100%
+    );
+  }
+  50% {
+    clip-path: polygon(
+      50% 50%,
+      0 0,
+      50% 0%,
+      100% 0%,
+      100% 100%,
+      50% 100%,
+      0% 100%
+    );
+  }
+  62.5% {
+    clip-path: polygon(
+      50% 50%,
+      100% 0,
+      100% 0%,
+      100% 0%,
+      100% 100%,
+      50% 100%,
+      0% 100%
+    );
+  }
+  75% {
+    clip-path: polygon(
+      50% 50%,
+      100% 100%,
+      100% 100%,
+      100% 100%,
+      100% 100%,
+      50% 100%,
+      0% 100%
+    );
+  }
+  100% {
+    clip-path: polygon(
+      50% 50%,
+      50% 100%,
+      50% 100%,
+      50% 100%,
+      50% 100%,
+      50% 100%,
+      0% 100%
+    );
+  }
+}
+
+@keyframes l20-2 {
+  0% {
+    transform: scaleY(1) rotate(0deg);
+  }
+  49.99% {
+    transform: scaleY(1) rotate(135deg);
+  }
+  50% {
+    transform: scaleY(-1) rotate(0deg);
+  }
+  100% {
+    transform: scaleY(-1) rotate(-135deg);
+  }
+}
+
+@media (max-width: 600px) {
+  .recipe-list-page {
+    .badges {
+      flex-direction: column;
+      gap: 4px;
+    }
+  }
+}
