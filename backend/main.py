@@ -24,12 +24,13 @@ except ImportError:  # pragma: no cover - handled at runtime
     PdfReader = None
 
 load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
+allowed_origins = os.getenv("ALLOWED_ORIGINS").split(",")
 
 app = FastAPI(title="Recipe Assistant API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
