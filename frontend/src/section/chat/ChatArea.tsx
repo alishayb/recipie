@@ -168,7 +168,8 @@ const ChatArea = () => {
             rows={1}
             placeholder="Ask anything"
             onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
+              const isMobile = window.matchMedia("(max-width: 768px)").matches;
+              if (e.key === "Enter" && !e.shiftKey && !isMobile) {
                 e.preventDefault();
                 e.currentTarget.form?.requestSubmit();
               }
