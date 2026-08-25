@@ -45,7 +45,9 @@ a {
 
 @media (max-width: 600px) {
   main {
-    display: block;
+    display: flex;
+    flex-direction: column-reverse;
+    height: 100dvh;
     width: 100%;
   }
 }

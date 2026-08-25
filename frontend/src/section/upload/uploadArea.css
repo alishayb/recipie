@@ -1,9 +1,7 @@
 .upload-area {
   padding: 32px;
-  width: 100%;
-  min-height: 0;
-  max-height: 100%;
-  overflow: auto;
+  max-width: 100vw;
+  overflow-y: auto;
 
   h1 {
     color: #3c3530;
@@ -113,4 +111,14 @@
   border: 2px dashed var(--accent-color, #c1502e);
   background: #fff;
   box-shadow: 0 0 24px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 600px) {
+  .upload-area {
+    max-width: 100dvw;
+
+    .upload-source .drag-n-drop {
+      padding: 16px;
+    }
+  }
 }

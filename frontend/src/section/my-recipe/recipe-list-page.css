@@ -1,6 +1,6 @@
 .recipe-list-page {
   padding: 32px;
-  width: 100%;
+  max-width: 100vw;
   max-height: 100vh;
   overflow: auto;
 
@@ -52,5 +52,11 @@
         gap: 8px;
       }
     }
+  }
+}
+
+@media (max-width: 600px) {
+  .recipe-list-page {
+    max-width: 100dvw;
   }
 }
