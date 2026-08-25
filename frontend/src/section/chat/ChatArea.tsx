@@ -162,7 +162,6 @@ const ChatArea = () => {
           <textarea
             id="chat"
             name="chat"
-            autoFocus
             ref={textareaRef}
             onInput={handleInput}
             rows={1}
