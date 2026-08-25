@@ -6,7 +6,6 @@ import saveRecipeIcon from "../../assets/ic-save-cookbook.svg";
 import removeHoverIcon from "../../assets/ic-trashcan-remove-active.svg";
 import removeIcon from "../../assets/ic-trashcan-remove.svg";
 import { API_BASE_URL } from "../../constants/constants";
-import EditRecipe from "../edit-recipe/EditRecipe";
 import "../my-recipe/recipe-list-page.css";
 import type { Recipe } from "../upload/UploadArea";
 import "./extractedRecipe.css";
@@ -32,7 +31,6 @@ const ExtractedRecipesReview = () => {
   const [editedRecipeList, setEditedRecipeList] = useState<Recipe[]>(
     reviewData?.recipeList ?? [],
   );
-  const [editRecipe, setEditRecipe] = useState<Recipe | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const saveRecipe = useMutation({
@@ -82,22 +80,6 @@ const ExtractedRecipesReview = () => {
     minute: "2-digit",
   });
 
-  if (editRecipe && !isLoading) {
-    return (
-      <EditRecipe
-        originalRecipe={editRecipe}
-        onSubmit={(newRecipe) => {
-          setEditedRecipeList((prev) =>
-            prev.map((rec) => (rec.id === newRecipe.id ? newRecipe : rec)),
-          );
-          setEditRecipe(null);
-        }}
-        previousSectionTitle="Extracted Recipe List"
-        onCancel={() => setEditRecipe(null)}
-      />
-    );
-  }
-
   return (
     <section className="recipe-list-page">
       <div className="badges">
@@ -140,7 +122,7 @@ const ExtractedRecipesReview = () => {
               className="recipe"
               onClick={() =>
                 navigate(
-                  `/upload/review/edit?source=${encodeURIComponent(source)}&id=${recipe.id}`,
+                  `/upload/review/edit?source=${encodeURIComponent(source)}&id=${recipe.id}&key=${encodeURIComponent(storageKey)}`,
                 )
               }
             >

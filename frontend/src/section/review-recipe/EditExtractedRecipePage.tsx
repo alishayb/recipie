@@ -7,16 +7,17 @@ const EditExtractedRecipe = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const source = searchParams.get("source") ?? "";
+  const storageKey = searchParams.get("key") ?? "";
   const id = searchParams.get("id") ?? "";
 
-  const storageKey = `upload-review:${source}`;
-
   const [recipeList] = useState<Recipe[] | null>(() => {
+    if (!storageKey) return null;
     const raw = sessionStorage.getItem(storageKey);
     return raw ? JSON.parse(raw).recipeList : null;
   });
 
   const recipe = recipeList?.find((r) => r.id === id) ?? null;
+  const backToReviewUrl = `/upload/review?source=${encodeURIComponent(source)}&key=${encodeURIComponent(storageKey)}`;
 
   const handleSave = (updatedRecipe: Recipe) => {
     const updatedList = recipeList!.map((r) =>
@@ -26,14 +27,12 @@ const EditExtractedRecipe = () => {
       storageKey,
       JSON.stringify({ recipeList: updatedList, source }),
     );
-    navigate(`/upload/review?source=${encodeURIComponent(source)}`);
+    navigate(backToReviewUrl);
   };
 
   const handleCancel = useCallback(() => {
-    navigate(`/upload/review?source=${encodeURIComponent(source)}`, {
-      replace: true,
-    });
-  }, [navigate, source]);
+    navigate(backToReviewUrl, { replace: true });
+  }, [navigate, backToReviewUrl]);
 
   useEffect(() => {
     if (!recipe) handleCancel();
