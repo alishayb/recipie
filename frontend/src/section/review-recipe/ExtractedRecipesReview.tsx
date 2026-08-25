@@ -15,15 +15,18 @@ const ExtractedRecipesReview = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const source = searchParams.get("source") ?? "";
+  const storageKey = searchParams.get("key") ?? "";
 
   const [reviewData] = useState<{ recipeList: Recipe[] } | null>(() => {
-    if (!source) return null;
-    const raw = sessionStorage.getItem(`upload-review:${source}`);
+    if (!storageKey) return null;
+    const raw = sessionStorage.getItem(storageKey);
     return raw ? JSON.parse(raw) : null;
   });
 
   useEffect(() => {
-    if (!reviewData) navigate("/upload", { replace: true });
+    if (!reviewData) {
+      navigate("/upload", { replace: true });
+    }
   }, [reviewData, navigate]);
 
   const [editedRecipeList, setEditedRecipeList] = useState<Recipe[]>(

@@ -1,12 +1,12 @@
-import { useMutation } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import documentIcon from "../../assets/ic-upload-doc.svg";
 import uploadFileIcon from "../../assets/ic-upload-file.svg";
+import Toast from "../../components/toast/Toast";
 import { API_BASE_URL } from "../../constants/constants";
+import { isValidFileType } from "../../utils/file";
 import LoadingExtraction from "../chat/LoadingExtraction";
 import "./uploadArea.css";
-import Toast from "../../components/toast/Toast";
 
 export type Recipe = {
   id: string;
@@ -15,59 +15,103 @@ export type Recipe = {
   steps: string[];
 };
 
+export type FileStatus = {
+  name: string;
+  status: "pending" | "done" | "error";
+};
+
+const uploadOneFile = async (file: File): Promise<Recipe[]> => {
+  const endpoint =
+    file.type === "application/pdf" ? "upload-pdf" : "upload-image";
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetch(`${API_BASE_URL}/${endpoint}`, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!res.ok) {
+    throw new Error(`Upload failed: ${res.status}`);
+  }
+
+  const data: { recipes: Recipe[] } = await res.json();
+  return data.recipes;
+};
+
 const UploadArea = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [dropError, setDropError] = useState<string | null>(null);
 
-  const uploadFile = useMutation({
-    mutationFn: async (file: File) => {
-      const endpoint =
-        file.type === "application/pdf" ? "upload-pdf" : "upload-image";
+  const [fileStatuses, setFileStatuses] = useState<FileStatus[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadErrors, setUploadErrors] = useState<string[]>([]);
 
-      const formData = new FormData();
-      formData.append("file", file);
+  const updateStatus = (name: string, status: FileStatus["status"]) => {
+    setFileStatuses((prev) =>
+      prev.map((f) => (f.name === name ? { ...f, status } : f)),
+    );
+  };
 
-      const res = await fetch(`${API_BASE_URL}/${endpoint}`, {
-        method: "POST",
-        body: formData,
-      });
+  const uploadFiles = async (files: File[]) => {
+    setUploadErrors([]);
+    setIsUploading(true);
+    setFileStatuses(files.map((f) => ({ name: f.name, status: "pending" })));
 
-      if (!res.ok) {
-        throw new Error(`Upload failed: ${res.status}`);
+    const results = await Promise.allSettled(
+      files.map(async (file) => {
+        try {
+          const recipes = await uploadOneFile(file);
+          updateStatus(file.name, "done");
+          return recipes;
+        } catch (err) {
+          updateStatus(file.name, "error");
+          throw err;
+        }
+      }),
+    );
+
+    const recipeList: Recipe[] = [];
+    const errors: string[] = [];
+
+    results.forEach((result, i) => {
+      if (result.status === "fulfilled") {
+        result.value.forEach((r) =>
+          recipeList.push({ ...r, id: crypto.randomUUID() }),
+        );
+      } else {
+        errors.push(files[i].name);
       }
+    });
 
-      return res.json();
-    },
-    onSuccess: (data: { recipes: Recipe[] }, file) => {
-      const recipeList: Recipe[] = data.recipes.map((r) => ({
-        ...r,
-        id: crypto.randomUUID(),
-      }));
+    setIsUploading(false);
 
-      const storageKey = `upload-review:${file.name}`;
-      sessionStorage.setItem(
-        storageKey,
-        JSON.stringify({ recipeList, source: file.name }),
-      );
-
-      navigate(`/upload/review?source=${encodeURIComponent(file.name)}`);
-
-      // navigate("/upload/review", {
-      //   state: { recipeList, source: file.name },
-      // });
-    },
-  });
-
-  const handleSelectedFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (file.type === "application/pdf" || file.type.includes("image")) {
-      uploadFile.mutate(file);
+    if (recipeList.length === 0) {
+      setUploadErrors(errors);
+      return;
     }
 
+    const source = files.map((f) => f.name).join(",");
+    const storageKey = `upload-review:batch-${Date.now()}`;
+    sessionStorage.setItem(storageKey, JSON.stringify({ recipeList, source }));
+
+    if (errors.length > 0) {
+      setUploadErrors(errors);
+    }
+
+    navigate(
+      `/upload/review?source=${encodeURIComponent(source)}&key=${encodeURIComponent(storageKey)}`,
+    );
+  };
+
+  const handleSelectedFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []).filter(isValidFileType);
+    if (files.length > 0) {
+      uploadFiles(files);
+    }
     e.target.value = "";
   };
 
@@ -75,19 +119,16 @@ const UploadArea = () => {
     e.preventDefault();
     setIsDragging(false);
 
-    const files = e.dataTransfer.files;
-    if (!files || files.length === 0) return;
-
-    if (files.length > 1) {
-      setDropError("Please drop only one file at a time.");
+    const files = Array.from(e.dataTransfer.files ?? []).filter(
+      isValidFileType,
+    );
+    if (files.length === 0) {
+      setDropError("Please drop a photo, screenshot, or PDF.");
       return;
     }
 
     setDropError(null);
-    const file = files[0];
-    if (file.type === "application/pdf" || file.type.includes("image")) {
-      uploadFile.mutate(file);
-    }
+    uploadFiles(files);
   };
 
   return (
@@ -99,9 +140,9 @@ const UploadArea = () => {
         Transform any cooking source into a cleanly formatted digital recipe.
         Simply choose your recipe file below.
       </p>
-      {uploadFile.isPending ? (
+      {isUploading ? (
         <div className="upload-source">
-          <LoadingExtraction />
+          <LoadingExtraction files={fileStatuses} />
         </div>
       ) : (
         <div className="upload-source">
@@ -124,7 +165,7 @@ const UploadArea = () => {
             <p className="subtext">
               {isDragging
                 ? "Release to upload your recipe"
-                : "Drop a photo, screenshot, or cookbook PDF pages here"}
+                : "Drop photos, screenshots, or cookbook PDF pages here"}
             </p>
           </div>
           <label htmlFor="recipeFiles">
@@ -134,8 +175,9 @@ const UploadArea = () => {
               name="recipeFiles"
               ref={fileInputRef}
               accept="image/*,application/pdf"
+              multiple
               onChange={handleSelectedFile}
-              disabled={uploadFile.isPending}
+              disabled={isUploading}
             />
             <img src={uploadFileIcon} alt="Upload icon" width={16} />
             <span>Choose File</span>
@@ -143,11 +185,11 @@ const UploadArea = () => {
         </div>
       )}
 
-      {uploadFile.isError && (
+      {uploadErrors.length > 0 && (
         <Toast
           type="error"
-          title={uploadFile.error.name}
-          message={uploadFile.error.message}
+          title="Some files failed"
+          message={`Failed to extract: ${uploadErrors.join(", ")}`}
         />
       )}
     </section>
