@@ -73,7 +73,7 @@
       all: unset;
       font-size: 16px;
       max-height: 50vh;
-      max-width: 100%;
+      width: 100%;
       scrollbar-color: #9c928d transparent;
       scrollbar-width: thin;
       overflow-wrap: break-word;
@@ -116,5 +116,9 @@
 
   .chat-area {
     height: calc(100vh - 48px);
+  }
+
+  .chat-textbox .text-input {
+    padding-right: 12px;
   }
 }
