@@ -124,3 +124,9 @@ class VectorStore:
             results.append((recipe_id, float(distance)))
 
         return results
+
+
+vector_store = VectorStore(
+    index_path=os.path.join(os.path.dirname(__file__), "recipes.faiss"),
+    mapping_path=os.path.join(os.path.dirname(__file__), "recipes.faiss.json"),
+)

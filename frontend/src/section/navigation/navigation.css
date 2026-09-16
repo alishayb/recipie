@@ -21,10 +21,16 @@
     border-right: 1px solid var(--stroke-color);
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding: 32px 32px 0px 20px;
+    justify-content: space-between;
+    padding: 32px 32px 32px 20px;
     transition: all 0.3s ease;
-    min-width: 240px;
+
+    .upper {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 240px;
+    }
 
     .recipie-logo {
       display: flex;
@@ -48,9 +54,14 @@
       cursor: pointer;
       overflow: hidden;
       white-space: nowrap;
+      align-self: stretch;
 
       &:hover {
         background-color: rgba(242, 217, 198, 0.4);
+      }
+
+      &#profile {
+        display: none;
       }
 
       img {
@@ -63,26 +74,99 @@
         font-weight: 600;
       }
     }
+
+    .chefs-note {
+      max-width: 100%;
+      background-color: white;
+      border: 1px solid #f2d9c6;
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 14px;
+      margin-top: 12px;
+
+      p:first-child {
+        color: #c1502e;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      p:last-child {
+        color: #6c635e;
+        line-height: 1.4em;
+      }
+    }
+
+    .lower {
+      background-color: #e7e1d8;
+      padding: 8px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: white;
+        cursor: pointer;
+        border-color: #c1502e;
+      }
+    }
+
+    .user-avatar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      background-color: #c1502e;
+      color: #e7e1d8;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .user-data {
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      .email {
+        font-size: 12px;
+      }
+    }
   }
 }
 
 @media (min-width: 601px) and (max-width: 1000px) {
   nav {
-    min-width: 140px;
+    .upper {
+      min-width: 140px;
+    }
   }
 }
 
 @media (max-width: 600px) {
   nav {
-    color: #9c928d;
-    background-color: white;
-    border-right: none;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 8px 0px;
-    border-top: 1px solid var(--stroke-color);
-    z-index: 50;
+    .upper {
+      color: #9c928d;
+      background-color: white;
+      border-right: none;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 8px 0px;
+      border-top: 1px solid var(--stroke-color);
+      z-index: 50;
+    }
+
+    .lower {
+      display: none;
+    }
 
     .recipie-logo {
       display: none;
@@ -107,6 +191,10 @@
       &.active {
         color: var(--primary-color);
       }
+    }
+
+    .chefs-note {
+      display: none;
     }
   }
 }

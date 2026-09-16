@@ -4,3 +4,4 @@ __pycache__
 *.db
 *.faiss
 *.faiss.json
+recipie-firebase-service-acc-key.json

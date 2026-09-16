@@ -5,7 +5,7 @@ import rightIcon from "../../assets/ic-chevron-right.svg";
 import saveRecipeIcon from "../../assets/ic-save-cookbook.svg";
 import removeHoverIcon from "../../assets/ic-trashcan-remove-active.svg";
 import removeIcon from "../../assets/ic-trashcan-remove.svg";
-import { API_BASE_URL } from "../../constants/constants";
+import { apiFetch } from "../../utils/api";
 import "../my-recipe/recipe-list-page.css";
 import type { Recipe } from "../upload/UploadArea";
 import "./extractedRecipe.css";
@@ -43,7 +43,7 @@ const ExtractedRecipesReview = () => {
         ...recipe.steps,
       ].join("\n");
 
-      const res = await fetch(`${API_BASE_URL}/save-recipe`, {
+      const res = await apiFetch("/save-recipe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -55,7 +55,9 @@ const ExtractedRecipesReview = () => {
       });
 
       if (!res.ok) throw new Error("Failed to save recipe");
-      return res.json();
+
+      const data = await res.json();
+      return data;
     },
   });
 

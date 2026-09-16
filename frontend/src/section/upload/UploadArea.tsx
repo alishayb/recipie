@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import documentIcon from "../../assets/ic-upload-doc.svg";
 import uploadFileIcon from "../../assets/ic-upload-file.svg";
 import Toast from "../../components/toast/Toast";
-import { API_BASE_URL } from "../../constants/constants";
+import { apiFetch } from "../../utils/api";
 import { isValidFileType } from "../../utils/file";
 import LoadingExtraction from "../chat/LoadingExtraction";
 import "./uploadArea.css";
@@ -27,7 +27,7 @@ const uploadOneFile = async (file: File): Promise<Recipe[]> => {
   const formData = new FormData();
   formData.append("file", file);
 
-  const res = await fetch(`${API_BASE_URL}/${endpoint}`, {
+  const res = await apiFetch(`/${endpoint}`, {
     method: "POST",
     body: formData,
   });

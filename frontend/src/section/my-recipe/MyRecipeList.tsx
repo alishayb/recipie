@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import rightIcon from "../../assets/ic-chevron-right.svg";
 import Toast from "../../components/toast/Toast";
-import { API_BASE_URL } from "../../constants/constants";
+import { apiFetch } from "../../utils/api";
 import EditRecipe from "../edit-recipe/EditRecipe";
 import type { Recipe } from "../upload/UploadArea";
 import "./recipe-list-page.css";
@@ -17,8 +17,7 @@ const MyRecipeList = () => {
   } = useQuery({
     queryKey: ["recipes"],
     queryFn: async () => {
-      const res = await fetch(`${API_BASE_URL}/recipes`);
-      if (!res.ok) throw new Error("Failed to load recipes");
+      const res = await apiFetch("/recipes");
       return res.json() as Promise<Recipe[]>;
     },
     retry: false,

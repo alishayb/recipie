@@ -15,6 +15,7 @@ def init_db():
         """
         CREATE TABLE IF NOT EXISTS recipes (
             id TEXT PRIMARY KEY,
+            user_id TEXT NOT NULL,
             title TEXT NOT NULL,
             text TEXT NOT NULL,
             ingredients TEXT NOT NULL DEFAULT '[]',
@@ -41,6 +42,7 @@ def init_db():
         """
         CREATE TABLE IF NOT EXISTS messages (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id TEXT NOT NULL,
             role TEXT NOT NULL CHECK(role IN ('user', 'assistant')),
             content TEXT NOT NULL,
             created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
@@ -52,14 +54,14 @@ def init_db():
 
 
 def update_recipe(
-    recipe_id: str, title: str, text: str, ingredients: list, steps: list, vector: list
+    recipe_id: str, user_id: str, title: str, text: str, ingredients: list, steps: list, vector: list
 ) -> bool:
     conn = get_connection()
     cursor = conn.execute(
         """
         UPDATE recipes
         SET title = ?, text = ?, ingredients = ?, steps = ?, vector = ?
-        WHERE id = ?
+        WHERE id = ? AND user_id = ?
         """,
         (
             title,
@@ -68,6 +70,7 @@ def update_recipe(
             json.dumps(steps),
             json.dumps(vector),
             recipe_id,
+            user_id,
         ),
     )
     conn.commit()
@@ -75,9 +78,12 @@ def update_recipe(
     conn.close()
     return updated
 
-def delete_recipe(recipe_id: str) -> bool:
+
+def delete_recipe(recipe_id: str, user_id: str) -> bool:
     conn = get_connection()
-    cursor = conn.execute("DELETE FROM recipes WHERE id = ?", (recipe_id,))
+    cursor = conn.execute(
+        "DELETE FROM recipes WHERE id = ? AND user_id = ?", (recipe_id, user_id)
+    )
     conn.commit()
     deleted = cursor.rowcount > 0
     conn.close()

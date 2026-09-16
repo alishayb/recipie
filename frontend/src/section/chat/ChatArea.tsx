@@ -4,7 +4,7 @@ import chatProfileLogo from "../../assets/ic-chat-profile.svg";
 import ellipseIcon from "../../assets/ic-ellipse.svg";
 import sendIcon from "../../assets/ic-send.svg";
 import utensilsIcon from "../../assets/ic-utensils.svg";
-import { API_BASE_URL } from "../../constants/constants";
+import { apiFetch } from "../../utils/api";
 import { getDateKey, getDayLabel } from "../../utils/date";
 import "./chatArea.css";
 import ErrorChat from "./ErrorChat";
@@ -32,8 +32,7 @@ const ChatArea = () => {
   const { data: messages, error: messageErr } = useQuery({
     queryKey: ["messages"],
     queryFn: async () => {
-      const res = await fetch(`${API_BASE_URL}/messages`);
-      if (!res.ok) throw new Error("Failed to load messages");
+      const res = await apiFetch("/messages");
       return res.json() as Promise<Message[]>;
     },
     retry: false,
@@ -41,12 +40,11 @@ const ChatArea = () => {
   const queryClient = useQueryClient();
   const sendMessage = useMutation({
     mutationFn: async (content: string) => {
-      const res = await fetch(`${API_BASE_URL}/ask`, {
+      const res = await apiFetch("/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: content }),
       });
-      if (!res.ok) throw new Error("Failed to send message");
       return res.json();
     },
     onMutate: async (content: string) => {

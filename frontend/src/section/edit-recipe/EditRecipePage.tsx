@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { API_BASE_URL } from "../../constants/constants";
+import { apiFetch } from "../../utils/api";
 import type { Recipe } from "../upload/UploadArea";
 import EditRecipe from "./EditRecipe";
 
@@ -11,14 +11,8 @@ const EditRecipePage = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["recipe", id],
     queryFn: async () => {
-      const res = await fetch(`${API_BASE_URL}/recipe/${id}`);
-
-      if (!res.ok) {
-        throw new Error("Failed to fetch recipe");
-      }
-
+      const res = await apiFetch(`/recipe/${id}`);
       const parsedData = await res.json();
-      console.log(">> parsedData", parsedData);
       return parsedData;
     },
     enabled: !!id,
@@ -36,7 +30,7 @@ const EditRecipePage = () => {
       ...recipe.steps,
     ].join("\n");
 
-    const res = await fetch(`${API_BASE_URL}/recipes/${id}`, {
+    const res = await apiFetch(`/recipes/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -58,7 +52,7 @@ const EditRecipePage = () => {
   const handleDelete = async () => {
     setLoadSubmit(true);
 
-    const res = await fetch(`${API_BASE_URL}/recipes/${id}`, {
+    const res = await apiFetch(`/recipes/${id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     });
