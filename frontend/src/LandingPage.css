@@ -179,6 +179,7 @@ h1 {
 
   &.secondary {
     border: 1px solid #e7dfd6;
+    color: #6c635e;
 
     &:hover {
       background: white;
