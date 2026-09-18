@@ -338,18 +338,6 @@ h1 {
   }
 }
 
-footer {
-  padding: 16px 0px;
-  background-color: #c1502e;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  gap: 16px;
-  color: white;
-}
-
 @media (max-width: 1020px) {
   .landing-page {
     padding: 0 54px;

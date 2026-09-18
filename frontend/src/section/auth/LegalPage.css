@@ -38,6 +38,7 @@
   font-weight: 700;
   color: var(--clay);
   letter-spacing: -0.01em;
+  cursor: pointer;
 }
 
 .legal-header__toggle {

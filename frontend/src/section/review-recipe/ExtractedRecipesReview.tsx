@@ -33,6 +33,14 @@ const ExtractedRecipesReview = () => {
   );
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    if (!storageKey) return;
+    sessionStorage.setItem(
+      storageKey,
+      JSON.stringify({ recipeList: editedRecipeList }),
+    );
+  }, [editedRecipeList, storageKey]);
+
   const saveRecipe = useMutation({
     mutationFn: async (recipe: Recipe) => {
       const text = [
@@ -82,10 +90,16 @@ const ExtractedRecipesReview = () => {
     minute: "2-digit",
   });
 
+  const sourceFiles = source.split(",").filter(Boolean);
+  const sourceLabel =
+    sourceFiles.length <= 1
+      ? sourceFiles[0]
+      : `${sourceFiles[0]}, and ${sourceFiles.length - 1} more`;
+
   return (
     <section className="recipe-list-page">
       <div className="badges">
-        <div className="source-badge">Source: {source}</div>
+        <div className="source-badge">Source: {sourceLabel}</div>
         <time dateTime={now.toISOString()}>Parsed today at {timeString}</time>
       </div>
       <h1>

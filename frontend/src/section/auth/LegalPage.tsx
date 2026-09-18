@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./LegalPage.css";
 
 type Doc = "privacy" | "terms";
@@ -38,12 +39,17 @@ const TERMS_SECTIONS: Section[] = [
 
 const LAST_UPDATED = "September 16, 2026";
 const APP_NAME = "Recipie";
-const CONTACT_EMAIL = "hello@recipie.app"; // TODO: replace with real contact address
+const CONTACT_EMAIL = "customer-service@recipie.dpdns.org";
 
-export default function LegalPage({ initialDoc = "privacy" }: { initialDoc?: Doc }) {
+export default function LegalPage({
+  initialDoc = "privacy",
+}: {
+  initialDoc?: Doc;
+}) {
+  const navigate = useNavigate();
   const [activeDoc, setActiveDoc] = useState<Doc>(initialDoc);
   const [activeSection, setActiveSection] = useState<string>(
-    (initialDoc === "privacy" ? PRIVACY_SECTIONS : TERMS_SECTIONS)[0]?.id ?? ""
+    (initialDoc === "privacy" ? PRIVACY_SECTIONS : TERMS_SECTIONS)[0]?.id ?? "",
   );
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -51,7 +57,8 @@ export default function LegalPage({ initialDoc = "privacy" }: { initialDoc?: Doc
 
   const handleDocChange = (doc: Doc) => {
     setActiveDoc(doc);
-    const firstSection = (doc === "privacy" ? PRIVACY_SECTIONS : TERMS_SECTIONS)[0]?.id ?? "";
+    const firstSection =
+      (doc === "privacy" ? PRIVACY_SECTIONS : TERMS_SECTIONS)[0]?.id ?? "";
     setActiveSection(firstSection);
   };
 
@@ -68,7 +75,7 @@ export default function LegalPage({ initialDoc = "privacy" }: { initialDoc?: Doc
           }
         });
       },
-      { rootMargin: "-15% 0px -70% 0px" }
+      { rootMargin: "-15% 0px -70% 0px" },
     );
 
     headings.forEach((h) => observer.observe(h));
@@ -76,15 +83,23 @@ export default function LegalPage({ initialDoc = "privacy" }: { initialDoc?: Doc
   }, [activeDoc, sections]);
 
   const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document
+      .getElementById(id)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
     <div className="legal-page">
       <header className="legal-header">
         <div className="legal-header__inner">
-          <span className="legal-header__brand">{APP_NAME}</span>
-          <div className="legal-header__toggle" role="tablist" aria-label="Legal document">
+          <span className="legal-header__brand" onClick={() => navigate("/")}>
+            {APP_NAME}
+          </span>
+          <div
+            className="legal-header__toggle"
+            role="tablist"
+            aria-label="Legal document"
+          >
             <button
               role="tab"
               aria-selected={activeDoc === "privacy"}
@@ -135,20 +150,20 @@ function PrivacyPolicy() {
     <article>
       <h1>Privacy Policy</h1>
       <p className="legal-intro">
-        This explains what {APP_NAME} collects when you use it, why, and what say you have
-        over it. {APP_NAME} is a personal recipe assistant: you save recipes from PDFs,
-        photos, or text, and ask questions about your own collection. This policy covers
-        the data that involves.
+        This explains what {APP_NAME} collects when you use it, why, and what
+        say you have over it. {APP_NAME} is a personal recipe assistant: you
+        save recipes from PDFs, photos, or text, and ask questions about your
+        own collection. This policy covers the data that involves.
       </p>
 
       <section id="overview">
         <h2>Overview</h2>
         <p>
-          {APP_NAME} is built around one idea: your recipes should answer your questions,
-          not the open internet's. To do that, we store the recipes you upload and the
-          account details needed to keep your collection private to you. We don't sell
-          your data, and we don't use your recipes to train AI models beyond what's needed
-          to answer your own questions.
+          {APP_NAME} is built around one idea: your recipes should answer your
+          questions, not the open internet's. To do that, we store the recipes
+          you upload and the account details needed to keep your collection
+          private to you. We don't sell your data, and we don't use your recipes
+          to train AI models beyond what's needed to answer your own questions.
         </p>
       </section>
 
@@ -156,27 +171,29 @@ function PrivacyPolicy() {
         <h2>What we collect</h2>
         <h3>Account information</h3>
         <p>
-          When you sign up, we collect your email address and, if you use Google sign-in,
-          your name and profile photo as provided by Google. Authentication is handled by
-          Firebase Auth; we don't see or store your password directly.
+          When you sign up, we collect your email address and, if you use Google
+          sign-in, your name and profile photo as provided by Google.
+          Authentication is handled by Firebase Auth; we don't see or store your
+          password directly.
         </p>
         <h3>Recipes you upload</h3>
         <p>
-          When you upload a PDF, photo, or paste in text, we extract the recipe content —
-          title, ingredients, steps — and store that text. If you submit a photo or PDF,
-          the file is processed to extract text and then discarded; we don't keep the
-          original image or document after extraction.
+          When you upload a PDF, photo, or paste in text, we extract the recipe
+          content — title, ingredients, steps — and store that text. If you
+          submit a photo or PDF, the file is processed to extract text and then
+          discarded; we don't keep the original image or document after
+          extraction.
         </p>
         <h3>Chat messages</h3>
         <p>
-          We store the questions you ask and the answers you receive, so your conversation
-          history is available when you come back.
+          We store the questions you ask and the answers you receive, so your
+          conversation history is available when you come back.
         </p>
         <h3>Usage data</h3>
         <p>
-          We collect basic technical data — timestamps, request logs, error logs — to keep
-          the service running and to diagnose problems. This isn't tied to your identity
-          beyond your account.
+          We collect basic technical data — timestamps, request logs, error logs
+          — to keep the service running and to diagnose problems. This isn't
+          tied to your identity beyond your account.
         </p>
       </section>
 
@@ -184,50 +201,57 @@ function PrivacyPolicy() {
         <h2>How we use it</h2>
         <ul>
           <li>To store and retrieve your recipes when you ask a question</li>
-          <li>To generate answers and substitution suggestions using your recipe collection</li>
-          <li>To keep your account secure and your data isolated from other users</li>
+          <li>
+            To generate answers and substitution suggestions using your recipe
+            collection
+          </li>
+          <li>
+            To keep your account secure and your data isolated from other users
+          </li>
           <li>To diagnose bugs and improve reliability</li>
         </ul>
         <p>
-          Your recipe text is converted into embeddings — numerical representations used
-          for search — so the assistant can find relevant recipes when you ask a question.
-          These embeddings are derived from your content and used only to serve your own
-          queries.
+          Your recipe text is converted into embeddings — numerical
+          representations used for search — so the assistant can find relevant
+          recipes when you ask a question. These embeddings are derived from
+          your content and used only to serve your own queries.
         </p>
       </section>
 
       <section id="third-parties">
         <h2>Who we share it with</h2>
         <p>
-          We use a small number of third-party services to run {APP_NAME}. We don't sell
-          your data to anyone, and we don't share it for advertising.
+          We use a small number of third-party services to run {APP_NAME}. We
+          don't sell your data to anyone, and we don't share it for advertising.
         </p>
         <ul>
           <li>
-            <strong>Google Gemini API</strong> — processes your uploaded content (text
-            extraction, image recognition, chat responses, embeddings). Content you upload
-            is sent to Gemini to generate these results.
+            <strong>Google Gemini API</strong> — processes your uploaded content
+            (text extraction, image recognition, chat responses, embeddings).
+            Content you upload is sent to Gemini to generate these results.
           </li>
           <li>
-            <strong>Firebase Authentication</strong> — manages sign-in and account
-            security.
+            <strong>Firebase Authentication</strong> — manages sign-in and
+            account security.
           </li>
         </ul>
         <p>
-          Each of these providers processes data under their own privacy terms in addition
-          to this one. We don't control how they secure data on their end, though we
-          choose providers that meet reasonable security standards.
+          Each of these providers processes data under their own privacy terms
+          in addition to this one. We don't control how they secure data on
+          their end, though we choose providers that meet reasonable security
+          standards.
         </p>
       </section>
 
       <section id="retention">
         <h2>How long we keep it</h2>
         <p>
-          We keep your recipes and chat history for as long as your account is active.
-          Uploaded files are discarded immediately after text extraction — we never
-          retain the originals. If you delete your account, we delete your recipes,
-          chat history, and account information within a reasonable period, except where
-          we're required to retain something for legal reasons.
+          We keep your recipes and chat history for as long as your account is
+          active. Uploaded files are discarded immediately after text extraction
+          — we never retain the originals. If you delete your account, we delete
+          your recipes, chat history, and account information within a
+          reasonable period, except where we're required to retain something for
+          legal reasons.
         </p>
       </section>
 
@@ -237,7 +261,10 @@ function PrivacyPolicy() {
         <ul>
           <li>Delete individual recipes from your collection</li>
           <li>Delete your chat history</li>
-          <li>Delete your account, which removes your stored data as described above</li>
+          <li>
+            Delete your account, which removes your stored data as described
+            above
+          </li>
           <li>Request a copy of the data we hold about you by contacting us</li>
         </ul>
       </section>
@@ -245,29 +272,31 @@ function PrivacyPolicy() {
       <section id="security">
         <h2>Security</h2>
         <p>
-          Your data is isolated per account — other users can't see your recipes or
-          conversations. Access to the backend is authenticated, and connections to
-          {" " + APP_NAME} are encrypted in transit. No system is perfectly secure, and we
-          can't guarantee absolute protection against every possible breach, but we take
-          reasonable steps to protect your data.
+          Your data is isolated per account — other users can't see your recipes
+          or conversations. Access to the backend is authenticated, and
+          connections to
+          {" " + APP_NAME} are encrypted in transit. No system is perfectly
+          secure, and we can't guarantee absolute protection against every
+          possible breach, but we take reasonable steps to protect your data.
         </p>
       </section>
 
       <section id="children">
         <h2>Children's privacy</h2>
         <p>
-          {APP_NAME} isn't directed at children under 13, and we don't knowingly collect
-          data from children under 13. If you believe a child has created an account, contact
-          us and we'll remove it.
+          {APP_NAME} isn't directed at children under 13, and we don't knowingly
+          collect data from children under 13. If you believe a child has
+          created an account, contact us and we'll remove it.
         </p>
       </section>
 
       <section id="changes">
         <h2>Changes to this policy</h2>
         <p>
-          If we make material changes to this policy, we'll update the date at the top of
-          this page and, where appropriate, notify you directly. Continued use of{" "}
-          {APP_NAME} after a change means you accept the updated policy.
+          If we make material changes to this policy, we'll update the date at
+          the top of this page and, where appropriate, notify you directly.
+          Continued use of {APP_NAME} after a change means you accept the
+          updated policy.
         </p>
       </section>
 
@@ -287,52 +316,53 @@ function TermsOfService() {
     <article>
       <h1>Terms of Service</h1>
       <p className="legal-intro">
-        These terms cover your use of {APP_NAME}. By creating an account or using the
-        service, you agree to them. If something here doesn't sit right, reach out before
-        signing up — we'd rather clarify than have you agree to something you're not sure
-        about.
+        These terms cover your use of {APP_NAME}. By creating an account or
+        using the service, you agree to them. If something here doesn't sit
+        right, reach out before signing up — we'd rather clarify than have you
+        agree to something you're not sure about.
       </p>
 
       <section id="acceptance">
         <h2>Acceptance of terms</h2>
         <p>
-          By accessing or using {APP_NAME}, you agree to be bound by these terms and our
-          Privacy Policy. If you don't agree, please don't use the service.
+          By accessing or using {APP_NAME}, you agree to be bound by these terms
+          and our Privacy Policy. If you don't agree, please don't use the
+          service.
         </p>
       </section>
 
       <section id="the-service">
         <h2>The service</h2>
         <p>
-          {APP_NAME} lets you upload recipes from PDFs, photos, and text, and ask questions
-          about your own collection using an AI assistant. Answers are grounded in the
-          recipes you've saved; substitution suggestions may draw on general knowledge
-          beyond your collection.
+          {APP_NAME} lets you upload recipes from PDFs, photos, and text, and
+          ask questions about your own collection using an AI assistant. Answers
+          are grounded in the recipes you've saved; substitution suggestions may
+          draw on general knowledge beyond your collection.
         </p>
       </section>
 
       <section id="accounts">
         <h2>Accounts</h2>
         <p>
-          You need an account to use {APP_NAME}, created via email/password or Google
-          sign-in. You're responsible for keeping your credentials secure and for
-          activity that happens under your account. Let us know right away if you suspect
-          unauthorized access.
+          You need an account to use {APP_NAME}, created via email/password or
+          Google sign-in. You're responsible for keeping your credentials secure
+          and for activity that happens under your account. Let us know right
+          away if you suspect unauthorized access.
         </p>
       </section>
 
       <section id="your-content">
         <h2>Your content</h2>
         <p>
-          You retain ownership of the recipes and content you upload. By uploading
-          content, you give us permission to store, process, and use it solely to
-          provide the service to you — extracting text, generating embeddings, and
-          answering your questions.
+          You retain ownership of the recipes and content you upload. By
+          uploading content, you give us permission to store, process, and use
+          it solely to provide the service to you — extracting text, generating
+          embeddings, and answering your questions.
         </p>
         <p>
-          You're responsible for making sure you have the right to upload the content
-          you submit. Don't upload material that infringes someone else's copyright or
-          other rights.
+          You're responsible for making sure you have the right to upload the
+          content you submit. Don't upload material that infringes someone
+          else's copyright or other rights.
         </p>
       </section>
 
@@ -340,10 +370,17 @@ function TermsOfService() {
         <h2>Acceptable use</h2>
         <p>You agree not to:</p>
         <ul>
-          <li>Use {APP_NAME} for anything unlawful or to infringe others' rights</li>
+          <li>
+            Use {APP_NAME} for anything unlawful or to infringe others' rights
+          </li>
           <li>Attempt to access another user's account or data</li>
-          <li>Interfere with or disrupt the service, including by overloading it</li>
-          <li>Reverse-engineer or attempt to extract the underlying source code, except as permitted by law</li>
+          <li>
+            Interfere with or disrupt the service, including by overloading it
+          </li>
+          <li>
+            Reverse-engineer or attempt to extract the underlying source code,
+            except as permitted by law
+          </li>
           <li>Use the service to build a competing product</li>
         </ul>
       </section>
@@ -351,59 +388,62 @@ function TermsOfService() {
       <section id="ai-limitations">
         <h2>AI-generated content</h2>
         <p>
-          {APP_NAME} uses AI to extract text, answer questions, and suggest substitutions.
-          AI output can be wrong — a substitution suggestion may not work as expected,
-          and extracted recipe text may contain errors, especially from handwritten notes
-          or low-quality images. Use your own judgment, particularly for anything related
-          to food safety, allergies, or dietary restrictions. We're not responsible for
-          outcomes from following AI-generated suggestions.
+          {APP_NAME} uses AI to extract text, answer questions, and suggest
+          substitutions. AI output can be wrong — a substitution suggestion may
+          not work as expected, and extracted recipe text may contain errors,
+          especially from handwritten notes or low-quality images. Use your own
+          judgment, particularly for anything related to food safety, allergies,
+          or dietary restrictions. We're not responsible for outcomes from
+          following AI-generated suggestions.
         </p>
       </section>
 
       <section id="availability">
         <h2>Availability</h2>
         <p>
-          We aim to keep {APP_NAME} available, but we don't guarantee uninterrupted
-          access. The service may be unavailable for maintenance, updates, or reasons
-          outside our control, including outages from third-party providers we depend on.
+          We aim to keep {APP_NAME} available, but we don't guarantee
+          uninterrupted access. The service may be unavailable for maintenance,
+          updates, or reasons outside our control, including outages from
+          third-party providers we depend on.
         </p>
       </section>
 
       <section id="termination">
         <h2>Termination</h2>
         <p>
-          You can delete your account at any time. We may suspend or terminate accounts
-          that violate these terms, with notice where reasonably possible. On
-          termination, your data is handled as described in the Privacy Policy.
+          You can delete your account at any time. We may suspend or terminate
+          accounts that violate these terms, with notice where reasonably
+          possible. On termination, your data is handled as described in the
+          Privacy Policy.
         </p>
       </section>
 
       <section id="disclaimers">
         <h2>Disclaimers</h2>
         <p>
-          {APP_NAME} is provided "as is," without warranties of any kind, express or
-          implied. We don't warrant that the service will be error-free, that AI-extracted
-          or AI-generated content will be accurate, or that it will meet your specific
-          needs.
+          {APP_NAME} is provided "as is," without warranties of any kind,
+          express or implied. We don't warrant that the service will be
+          error-free, that AI-extracted or AI-generated content will be
+          accurate, or that it will meet your specific needs.
         </p>
       </section>
 
       <section id="liability">
         <h2>Limitation of liability</h2>
         <p>
-          To the extent permitted by law, {APP_NAME} and its operator aren't liable for
-          indirect, incidental, or consequential damages arising from your use of the
-          service, including damages related to inaccurate recipe extraction or
-          substitution suggestions.
+          To the extent permitted by law, {APP_NAME} and its operator aren't
+          liable for indirect, incidental, or consequential damages arising from
+          your use of the service, including damages related to inaccurate
+          recipe extraction or substitution suggestions.
         </p>
       </section>
 
       <section id="changes-terms">
         <h2>Changes to these terms</h2>
         <p>
-          We may update these terms from time to time. If we make material changes,
-          we'll update the date at the top of this page. Continued use after a change
-          means you accept the updated terms.
+          We may update these terms from time to time. If we make material
+          changes, we'll update the date at the top of this page. Continued use
+          after a change means you accept the updated terms.
         </p>
       </section>
 

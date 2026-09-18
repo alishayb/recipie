@@ -1,0 +1,115 @@
+.site-footer {
+  background: #C1502E;
+  color: #F7EFE3;
+  padding: 64px 32px 32px;
+}
+
+.site-footer .footer-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.site-footer .footer-top {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr;
+  gap: 48px;
+  padding-bottom: 40px;
+}
+
+.site-footer .footer-wordmark {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #F7EFE3;
+  margin: 0 0 12px;
+  letter-spacing: -0.01em;
+}
+
+.site-footer .footer-brand p {
+  margin: 0;
+  color: rgba(247, 239, 227, 0.68);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  max-width: 32ch;
+}
+
+.site-footer .footer-col h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #F7EFE3;
+  margin: 0 0 16px;
+}
+
+.site-footer .footer-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.site-footer .footer-col a {
+  color: rgba(247, 239, 227, 0.68);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.15s ease;
+}
+
+.site-footer .footer-col a:hover,
+.site-footer .footer-col a:focus-visible {
+  color: #F7EFE3;
+}
+
+.site-footer .footer-col a:focus-visible {
+  outline: 2px solid #F7EFE3;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.site-footer .footer-divider {
+  height: 1px;
+  background: rgba(247, 239, 227, 0.22);
+  border: none;
+  margin: 0;
+}
+
+.site-footer .footer-bottom {
+  padding-top: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.site-footer .footer-bottom p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: rgba(247, 239, 227, 0.68);
+}
+
+.site-footer .footer-tagline {
+  font-size: 0.85rem;
+  color: rgba(247, 239, 227, 0.68);
+}
+
+@media (max-width: 720px) {
+  .site-footer {
+    padding: 48px 20px 24px;
+  }
+  .site-footer .footer-top {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding-bottom: 32px;
+  }
+  .site-footer .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-footer .footer-col a {
+    transition: none;
+  }
+}

@@ -5,6 +5,7 @@ import desktopChatScreen from "./assets/screengrabs/desktop-chat.png";
 import mobileChatScreen from "./assets/screengrabs/mobile-chat.png";
 import mobileCookbookScreen from "./assets/screengrabs/mobile-my-recipes.png";
 import { AuthModal } from "./section/auth/AuthModal";
+import { Footer } from "./section/navigation/Footer";
 
 const screens = {
   chat: mobileChatScreen,
@@ -275,11 +276,7 @@ export default function App() {
         </motion.section>
       </div>
 
-      <footer>
-        <span>© 2026 Recipie</span>
-        <span className="dot">•</span>
-        <span>Built for home cooks who save too many recipes.</span>
-      </footer>
+      <Footer onLogin={() => setShowAuthModal(true)} />
 
       {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
     </div>
